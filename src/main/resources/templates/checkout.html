@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout - Fashion Store</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .item {
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item h3 {
+            margin: 0 0 8px;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .place-order {
+            width: 100%;
+            padding: 14px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .place-order:hover {
+            background: #006400;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #222;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Fashion Store</h1>
+    <h2>Checkout</h2>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Order Summary</h2>
+
+        <div class="item"
+             th:each="item : ${cart.items}">
+
+            <h3 th:text="${item.product.name}">
+                Product Name
+            </h3>
+
+            <p>
+                Price:
+                ₹<span th:text="${item.product.price}">
+                    0
+                </span>
+            </p>
+
+            <p>
+                Quantity:
+                <span th:text="${item.quantity}">
+                    1
+                </span>
+            </p>
+
+            <p>
+                Item Total:
+                ₹<span th:text="${item.product.price * item.quantity}">
+                    0
+                </span>
+            </p>
+
+        </div>
+
+        <hr>
+
+        <div class="total">
+
+            Total:
+            ₹<span th:text="${total}">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Confirm Order</h2>
+
+        <p>
+            Please check your order details before placing
+            the order.
+        </p>
+
+        <form th:action="@{/checkout/place-order}"
+              method="post">
+
+            <button type="submit"
+                    class="place-order">
+                Place Order
+            </button>
+
+        </form>
+
+        <a class="back"
+           th:href="@{/cart}">
+            ← Back to Cart
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

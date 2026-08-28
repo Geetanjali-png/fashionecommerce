@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Variant Form - Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .header {
+            background: #222;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-card h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #222;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .save-btn:hover {
+            background: #444;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background: #555;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Admin - Product Variant</h1>
+</div>
+
+<div class="container">
+
+    <div class="form-card">
+
+        <h2 th:text="${variant.id == null ? 'Add Product Variant' : 'Edit Product Variant'}">
+            Add Product Variant
+        </h2>
+
+        <form th:action="@{/admin/variants/save}"
+              method="post">
+
+            <div class="form-group">
+
+                <label for="productId">
+                    Product
+                </label>
+
+                <select id="productId"
+                        name="productId"
+                        required>
+
+                    <option value="">
+                        Select Product
+                    </option>
+
+                    <option th:each="product : ${products}"
+                            th:value="${product.id}"
+                            th:text="${product.name}"
+                            th:selected="${variant.product != null && variant.product.id == product.id}">
+                        Product
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="size">
+                    Size
+                </label>
+
+                <input type="text"
+                       id="size"
+                       name="size"
+                       th:value="${variant.size}"
+                       placeholder="Example: M, L, XL"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="color">
+                    Color
+                </label>
+
+                <input type="text"
+                       id="color"
+                       name="color"
+                       th:value="${variant.color}"
+                       placeholder="Example: Black, Red, Blue"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="stock">
+                    Stock
+                </label>
+
+                <input type="number"
+                       id="stock"
+                       name="stock"
+                       th:value="${variant.stock}"
+                       min="0"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="price">
+                    Price
+                </label>
+
+                <input type="number"
+                       id="price"
+                       name="price"
+                       th:value="${variant.price}"
+                       min="0"
+                       step="0.01"
+                       required>
+
+            </div>
+
+            <button type="submit"
+                    class="save-btn"
+                    th:text="${variant.id == null ? 'Save Variant' : 'Update Variant'}">
+                Save Variant
+            </button>
+
+        </form>
+
+        <a class="back-btn"
+           th:href="@{/admin/variants}">
+            ← Back to Variants
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

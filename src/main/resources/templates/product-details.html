@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${product.name} + ' - Fashion Store'">
+        Product Details
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto 25px;
+        }
+
+        h2 {
+            font-size: 30px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        select,
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px 0 15px;
+        }
+
+        select {
+            width: 100%;
+        }
+
+        .quantity {
+            width: 80px;
+        }
+
+        button {
+            padding: 12px 22px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .variants-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .variants-table th,
+        .variants-table td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .variants-table th {
+            background: #222;
+            color: white;
+        }
+
+        .stock-available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .stock-out {
+            color: red;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background: #555;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .no-variants {
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Fashion Store</h1>
+</header>
+
+<div class="container">
+
+    <!-- PRODUCT -->
+
+    <div class="card">
+
+        <img class="product-image"
+             th:src="${product.imageUrl}"
+             th:alt="${product.name}">
+
+        <h2 th:text="${product.name}">
+            Product Name
+        </h2>
+
+        <p class="price">
+            ₹<span th:text="${product.price}">0</span>
+        </p>
+
+        <p class="description"
+           th:text="${product.description}">
+            Product Description
+        </p>
+
+        <p th:if="${product.category != null}">
+            <strong>Category:</strong>
+            <span th:text="${product.category.name}">
+                Category
+            </span>
+        </p>
+
+        <p th:if="${product.brand != null}">
+            <strong>Brand:</strong>
+            <span th:text="${product.brand.name}">
+                Brand
+            </span>
+        </p>
+
+
+        <!-- ADD TO CART -->
+
+        <form th:action="@{/cart/add/{id}(id=${product.id})}"
+              method="post">
+
+            <label>
+                <strong>Select Variant:</strong>
+            </label>
+
+            <select name="variantId"
+                    id="variantId"
+                    required
+                    onchange="updateStock()">
+
+                <option value="">
+                    -- Select Size & Color --
+                </option>
+
+                <option th:each="variant : ${variants}"
+                        th:if="${variant.stock > 0}"
+                        th:value="${variant.id}"
+                        th:text="${variant.size + ' - ' + variant.color + ' - ₹' + variant.price + ' (' + variant.stock + ' available)'}"
+                        th:data-stock="${variant.stock}">
+                </option>
+
+            </select>
+
+
+            <label>
+                <strong>Quantity:</strong>
+            </label>
+
+            <br>
+
+            <input class="quantity"
+                   type="number"
+                   name="quantity"
+                   id="quantity"
+                   value="1"
+                   min="1"
+                   required>
+
+
+            <p id="stockMessage"
+               class="stock-available">
+            </p>
+
+
+            <button type="submit"
+                    id="cartButton"
+                    disabled>
+
+                Add to Cart
+
+            </button>
+
+        </form>
+
+
+        <a class="back-btn"
+           th:href="@{/products}">
+
+            ← Back to Products
+
+        </a>
+
+    </div>
+
+
+
+    <!-- AVAILABLE VARIANTS -->
+
+    <div class="card">
+
+        <h2>Available Variants</h2>
+
+        <table class="variants-table"
+               th:if="${variants != null && !variants.isEmpty()}">
+
+            <thead>
+
+            <tr>
+                <th>Size</th>
+                <th>Color</th>
+                <th>Stock</th>
+                <th>Price</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="variant : ${variants}">
+
+                <td th:text="${variant.size}">
+                    M
+                </td>
+
+                <td th:text="${variant.color}">
+                    Black
+                </td>
+
+                <td>
+
+                    <span th:if="${variant.stock > 0}"
+                          class="stock-available"
+                          th:text="${variant.stock + ' available'}">
+
+                        10 available
+
+                    </span>
+
+                    <span th:if="${variant.stock <= 0}"
+                          class="stock-out">
+
+                        Out of Stock
+
+                    </span>
+
+                </td>
+
+                <td>
+
+                    ₹<span th:text="${variant.price}">
+                        0
+                    </span>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="no-variants"
+           th:if="${variants == null || variants.isEmpty()}">
+
+            No variants available for this product.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function updateStock() {
+
+        const select = document.getElementById("variantId");
+        const quantity = document.getElementById("quantity");
+        const button = document.getElementById("cartButton");
+        const message = document.getElementById("stockMessage");
+
+        const selectedOption =
+            select.options[select.selectedIndex];
+
+        if (!select.value) {
+
+            button.disabled = true;
+            message.textContent = "";
+
+            return;
+        }
+
+        const stock =
+            parseInt(selectedOption.dataset.stock);
+
+        quantity.max = stock;
+
+        if (stock > 0) {
+
+            button.disabled = false;
+
+            message.textContent =
+                stock + " items available";
+
+        } else {
+
+            button.disabled = true;
+
+            message.textContent =
+                "Out of stock";
+        }
+    }
+
+
+    document.getElementById("quantity")
+        .addEventListener("input", function () {
+
+            const select =
+                document.getElementById("variantId");
+
+            const button =
+                document.getElementById("cartButton");
+
+            const selectedOption =
+                select.options[select.selectedIndex];
+
+            if (!select.value) {
+
+                button.disabled = true;
+                return;
+            }
+
+            const stock =
+                parseInt(selectedOption.dataset.stock);
+
+            if (parseInt(this.value) > stock) {
+
+                this.value = stock;
+
+            }
+
+            if (parseInt(this.value) < 1) {
+
+                this.value = 1;
+
+            }
+
+        });
+
+</script>
+
+</body>
+
+</html>

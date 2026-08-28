@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product - Fashion Store</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 22px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #222;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Fashion Store</h1>
+    <h2>Edit Product</h2>
+</header>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <form th:action="@{/admin/products/edit/{id}(id=${product.id})}"
+              th:object="${product}"
+              method="post">
+
+            <label>Product Name</label>
+
+            <input type="text"
+                   th:field="*{name}"
+                   required>
+
+            <label>Description</label>
+
+            <textarea th:field="*{description}"></textarea>
+
+            <label>Price</label>
+
+            <input type="number"
+                   th:field="*{price}"
+                   step="0.01"
+                   min="0"
+                   required>
+
+            <label>Image URL</label>
+
+            <input type="text"
+                   th:field="*{imageUrl}">
+
+            <button type="submit">
+                Update Product
+            </button>
+
+        </form>
+
+        <a class="back"
+           th:href="@{/admin}">
+            ← Back to Admin
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

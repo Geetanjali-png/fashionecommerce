@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .order-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .order-card h2 {
+            margin-top: 0;
+        }
+
+        .order-info {
+            margin: 8px 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 5px;
+            background: #e7f7e7;
+            color: green;
+            font-weight: bold;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 18px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .view-btn:hover {
+            background: #444;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .shop-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>My Orders</h1>
+
+</header>
+
+
+<div class="container">
+
+
+    <div th:if="${orders == null || orders.isEmpty()}"
+         class="empty">
+
+        <h2>No Orders Yet</h2>
+
+        <p>You have not placed any orders.</p>
+
+        <a href="/products"
+           class="shop-btn">
+
+            Continue Shopping
+
+        </a>
+
+    </div>
+
+
+    <div th:each="order : ${orders}"
+         class="order-card">
+
+        <h2>
+            Order #<span th:text="${order.id}">1</span>
+        </h2>
+
+        <p class="order-info">
+
+            <strong>Date:</strong>
+
+            <span th:text="${order.orderDate}">
+                Date
+            </span>
+
+        </p>
+
+
+        <p class="order-info">
+
+            <strong>Status:</strong>
+
+            <span class="status"
+                  th:text="${order.status}">
+
+                PLACED
+
+            </span>
+
+        </p>
+
+
+        <p class="order-info total">
+
+            Total: ₹<span th:text="${order.totalAmount}">
+                0
+            </span>
+
+        </p>
+
+
+        <a th:href="@{/orders/{id}(id=${order.id})}"
+           class="view-btn">
+
+            View Order
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

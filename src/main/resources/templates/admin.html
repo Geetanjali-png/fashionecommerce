@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #444;
+        }
+
+        .add {
+            background: #198754;
+        }
+
+        .add:hover {
+            background: #146c43;
+        }
+
+        .delete {
+            background: #dc3545;
+        }
+
+        .delete:hover {
+            background: #b02a37;
+        }
+
+        .products {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #222;
+            color: white;
+        }
+
+        img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .logout {
+            background: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>Fashion Store Admin</h1>
+
+    <a href="/logout"
+       class="btn logout">
+        Logout
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <div class="top">
+
+        <h2>Manage Products</h2>
+
+        <a href="/admin/products/add"
+           class="btn add">
+            + Add Product
+        </a>
+
+    </div>
+
+
+    <div class="products">
+
+        <table th:if="${products != null && !products.isEmpty()}">
+
+            <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Actions</th>
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <tr th:each="product : ${products}">
+
+                <td th:text="${product.id}">
+                    1
+                </td>
+
+                <td>
+
+                    <img th:src="${product.imageUrl}"
+                         th:alt="${product.name}">
+
+                </td>
+
+                <td th:text="${product.name}">
+                    Product
+                </td>
+
+                <td>
+                    ₹<span th:text="${product.price}">
+                        0
+                    </span>
+                </td>
+
+                <td
+                        th:text="${product.category != null ? product.category.name : 'N/A'}">
+                    Category
+                </td>
+
+                <td
+                        th:text="${product.brand != null ? product.brand.name : 'N/A'}">
+                    Brand
+                </td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}"
+                           class="btn">
+                            Edit
+                        </a>
+
+                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}"
+                           class="btn delete"
+                           onclick="return confirm('Are you sure you want to delete this product?');">
+                            Delete
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="empty"
+             th:if="${products == null || products.isEmpty()}">
+
+            <h3>No Products Found</h3>
+
+            <p>Add your first product.</p>
+
+            <a href="/admin/products/add"
+               class="btn add">
+                Add Product
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

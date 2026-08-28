@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fashion Store - Products</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 22px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 35px auto;
+        }
+
+        .hero {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .hero p {
+            color: #666;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .search-form button {
+            padding: 13px 22px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .search-form button:hover {
+            background: #333;
+        }
+
+        .clear {
+            display: inline-block;
+            margin-top: 12px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .product {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+            margin-bottom: 15px;
+        }
+
+        .product h2 {
+            margin: 5px 0 10px;
+            font-size: 20px;
+        }
+
+        .description {
+            color: #666;
+            line-height: 1.5;
+            min-height: 45px;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .category,
+        .brand {
+            margin: 7px 0;
+            color: #555;
+        }
+
+        .details {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            padding: 12px;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .details:hover {
+            background: #333;
+        }
+
+        .empty {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 35px;
+            padding: 20px;
+        }
+
+        .navigation a {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 10px 18px;
+            color: white;
+            background: #111;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .navigation a:hover {
+            background: #333;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-links a {
+                margin: 0 8px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .hero h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>Fashion Store</h1>
+
+    <div class="header-links">
+
+        <a th:href="@{/}">
+            Home
+        </a>
+
+        <a th:href="@{/cart}">
+            🛒 Cart
+        </a>
+
+        <a th:href="@{/orders}">
+            My Orders
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="hero">
+
+        <h2>Discover Your Style</h2>
+
+        <p>
+            Explore our latest fashion collection.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <form class="search-form"
+              th:action="@{/products}"
+              method="get">
+
+            <input type="text"
+                   name="search"
+                   th:value="${search}"
+                   placeholder="Search products...">
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+        <a class="clear"
+           th:href="@{/products}">
+            Show All Products
+        </a>
+
+    </div>
+
+
+    <!-- NO PRODUCTS -->
+
+    <div class="empty"
+         th:if="${products == null || products.isEmpty()}">
+
+        <h2>No Products Found</h2>
+
+        <p>
+            Try searching for a different product.
+        </p>
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+
+    <div class="products"
+         th:unless="${products == null || products.isEmpty()}">
+
+        <div class="product"
+             th:each="product : ${products}">
+
+
+            <!-- PRODUCT IMAGE -->
+
+            <img class="product-image"
+                 th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}"
+                 th:src="${product.imageUrl}"
+                 th:alt="${product.name}">
+
+
+            <div class="product-image"
+                 th:unless="${product.imageUrl != null && !product.imageUrl.isEmpty()}">
+            </div>
+
+
+            <h2 th:text="${product.name}">
+                Product Name
+            </h2>
+
+
+            <p class="description"
+               th:text="${product.description}">
+                Product Description
+            </p>
+
+
+            <p class="price">
+
+                ₹<span th:text="${product.price}">
+                    0
+                </span>
+
+            </p>
+
+
+            <p class="category"
+               th:if="${product.category != null}">
+
+                <strong>Category:</strong>
+
+                <span th:text="${product.category.name}">
+                    Category
+                </span>
+
+            </p>
+
+
+            <p class="brand"
+               th:if="${product.brand != null}">
+
+                <strong>Brand:</strong>
+
+                <span th:text="${product.brand.name}">
+                    Brand
+                </span>
+
+            </p>
+
+
+            <a class="details"
+               th:href="@{/products/{id}(id=${product.id})}">
+
+                View Product
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="navigation">
+
+        <a th:href="@{/}">
+            Home
+        </a>
+
+        <a th:href="@{/cart}">
+            🛒 Cart
+        </a>
+
+        <a th:href="@{/orders}">
+            My Orders
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
